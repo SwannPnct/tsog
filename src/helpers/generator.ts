@@ -1,6 +1,37 @@
 import ts from "typescript";
-import { getTypeKind, getName, getKind } from "./looker";
+import { getTypeKind, getName, getKind, findStatementByName, getMembers } from "./looker";
 import { createBoolean, createNumber, createString } from "./creator";
+import { readFileSync } from "fs";
+import path from "path";
+
+const typeFile = 'src/type.d.ts'
+
+export const _generate = (targetName: string): any => {
+    const data = readFileSync(path.resolve(typeFile), { encoding: 'utf-8' })
+    const file = ts.createSourceFile('src.ts', data, ts.ScriptTarget.Latest)
+
+    const node = findStatementByName(file, targetName)
+
+    if (!node) throw new Error(`Unable to find the type or interface for "${targetName}"`)
+
+    return generateType(node)
+}
+
+export const generateType = (node: any) => {
+    const members = getMembers(node)
+
+    const generated: any = {}
+    if (!members) {
+        generateMember(generated, node)
+        return generated[getName(node)]
+    }
+
+    members.forEach((member) => {
+        generateMember(generated, member)
+    })
+    return generated
+}
+
 
 export const generateMember = (generated: Record<any, any>, member: any) => {
     if (!!member.questionToken && createBoolean()) {
@@ -8,8 +39,15 @@ export const generateMember = (generated: Record<any, any>, member: any) => {
     }
 
     const kind = getTypeKind(member)
+    console.log(kind)
 
     switch (kind) {
+        case ts.SyntaxKind.TypeReference:
+            generateNestedType(generated, member)
+            break;
+        case ts.SyntaxKind.TypeLiteral:
+            generateTypeLiteral(generated, member)
+            break;
         case ts.SyntaxKind.UnionType:
             generateUnion(generated, member)
             break;
@@ -47,6 +85,14 @@ export const generateUnion = (generated: Record<any, any>, member: any) => {
         ...member,
         type: pick
     })
+}
+
+export const generateNestedType = (generated: Record<any, any>, member: any) => {
+    generated[getName(member)] = _generate(member.type.typeName.escapedText)
+}
+
+export const generateTypeLiteral = (generated: Record<any, any>, member: any) => {
+    generated[getName(member)] = generateType(member.type)
 }
 
 export const generateArray = (generated: Record<any, any>, member: any) => {

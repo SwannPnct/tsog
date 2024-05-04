@@ -33,8 +33,12 @@ export interface DifferentTypeObjectInterface {
 }
 
 export interface ParentObjectInterface {
-    nestedInterface: GenericObjectInterface
+    nestedInterface: GenericObjectInterface[]
     nestedType: GenericObjectType
+    nestedObject: {
+        id: number
+        name: string
+    }
 }
 
 export interface ComplexObjectInterface {

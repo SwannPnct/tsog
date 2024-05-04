@@ -3,6 +3,7 @@ import ts from "typescript"
 export const getMembers = (node: any): null | ts.Node[] => {
     switch (node.kind) {
         case ts.SyntaxKind.InterfaceDeclaration:
+        case ts.SyntaxKind.TypeLiteral:
             return node.members
         case ts.SyntaxKind.TypeAliasDeclaration:
             return node.type.members
