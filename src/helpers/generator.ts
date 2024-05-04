@@ -34,14 +34,18 @@ export const generateType = (node: any) => {
 
 
 export const generateMember = (generated: Record<any, any>, member: any) => {
+    if (!member) throw new Error('Falsy member')
+
     if (!!member.questionToken && createBoolean()) {
         return
     }
 
     const kind = getTypeKind(member)
-    console.log(kind)
 
     switch (kind) {
+        case ts.SyntaxKind.ParenthesizedType:
+            generateParenthesizedType(generated, member)
+            break;
         case ts.SyntaxKind.TypeReference:
             generateNestedType(generated, member)
             break;
@@ -77,6 +81,10 @@ export const generateMember = (generated: Record<any, any>, member: any) => {
     }
 }
 
+export const generateParenthesizedType = (generated: Record<any, any>, member: any) => {
+    generateMember(generated, { ...member.type, name: member.name })
+}
+
 export const generateUnion = (generated: Record<any, any>, member: any) => {
     const { types } = member.type
     const pick = types[(Math.floor(Math.random() * types.length))]
@@ -100,6 +108,7 @@ export const generateArray = (generated: Record<any, any>, member: any) => {
     const array: any[] = []
     for (let i = 0; i < size; i++) {
         generateMember(array, {
+            ...member,
             type: {
                 ...member.type.elementType
             },

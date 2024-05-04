@@ -28,8 +28,7 @@ export interface ArrayObjectInterface {
 }
 
 export interface DifferentTypeObjectInterface {
-    ids: number[] | string[]
-    nums: (string | number)[]
+    numsOrStrings: (string | number)[]
 }
 
 export interface ParentObjectInterface {
