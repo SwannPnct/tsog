@@ -32,7 +32,7 @@ export interface DifferentTypeObjectInterface {
 }
 
 export interface ParentObjectInterface {
-    nestedInterface: GenericObjectInterface[]
+    nestedInterfaces: GenericObjectInterface[]
     nestedType: GenericObjectType
     nestedObject: {
         id: number
@@ -47,6 +47,7 @@ export interface ComplexObjectInterface {
     names: string[]
     random: string | number
     optional?: number
+    nested: ParentObjectInterface
 }
 
 export interface EnumObjectInterface {

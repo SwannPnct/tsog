@@ -1,18 +1,19 @@
 {
-    "name": "typescript-object-generator",
-    "version": "1.0.0",
+    "name": "tsog",
+    "version": "0.1.0",
     "description": "",
     "main": "index.js",
     "scripts": {
+        "clean": "npx tsc --build --clean",
         "build": "npx tsc",
-        "start": "npm run build && node dist/index.js"
+        "start": "node dist/index.js",
+        "prestart": "npm run build",
+        "poststart": "npm run clean"
     },
     "author": "",
     "license": "ISC",
     "dependencies": {
-        "fs": "^0.0.1-security",
-        "typescript": "^5.4.5",
-        "util": "^0.12.5"
+        "typescript": "^5.4.5"
     },
     "devDependencies": {
         "@types/node": "^20.12.7"

@@ -1,6 +1,6 @@
 import ts from "typescript";
 import { getTypeKind, getName, getKind, findStatementByName, getMembers } from "./looker";
-import { createBoolean, createNumber, createString } from "./creator";
+import { randomArray, randomBoolean, randomNumber, randomPick, randomString } from "./randomizer";
 import { readFileSync } from "fs";
 import path from "path";
 
@@ -36,7 +36,7 @@ export const generateType = (node: any) => {
 export const generateMember = (generated: Record<any, any>, member: any) => {
     if (!member) throw new Error('Falsy member')
 
-    if (!!member.questionToken && createBoolean()) {
+    if (!!member.questionToken && randomBoolean()) {
         return
     }
 
@@ -87,11 +87,10 @@ export const generateParenthesizedType = (generated: Record<any, any>, member: a
 
 export const generateUnion = (generated: Record<any, any>, member: any) => {
     const { types } = member.type
-    const pick = types[(Math.floor(Math.random() * types.length))]
 
     generateMember(generated, {
         ...member,
-        type: pick
+        type: randomPick(types)
     })
 }
 
@@ -104,9 +103,8 @@ export const generateTypeLiteral = (generated: Record<any, any>, member: any) =>
 }
 
 export const generateArray = (generated: Record<any, any>, member: any) => {
-    const size = Math.floor(Math.random() * 10)
-    const array: any[] = []
-    for (let i = 0; i < size; i++) {
+    const array = randomArray()
+    for (let i = 0; i < array.length; i++) {
         generateMember(array, {
             ...member,
             type: {
@@ -122,15 +120,15 @@ export const generateArray = (generated: Record<any, any>, member: any) => {
 }
 
 export const generateString = (generated: Record<any, any>, member: ts.Node) => {
-    generated[getName(member)] = createString()
+    generated[getName(member)] = randomString()
 }
 
 export const generateNumber = (generated: Record<any, any>, member: ts.Node) => {
-    generated[getName(member)] = createNumber()
+    generated[getName(member)] = randomNumber()
 }
 
 export const generateBoolean = (generated: Record<any, any>, member: ts.Node) => {
-    generated[getName(member)] = createBoolean()
+    generated[getName(member)] = randomBoolean()
 }
 
 export const generateUndefined = (generated: Record<any, any>, member: ts.Node) => {
