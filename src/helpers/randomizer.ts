@@ -1,4 +1,4 @@
-import { randomInt, randomUUID } from "crypto"
+import { randomInt, randomUUID } from 'crypto'
 
 export const randomString = () => randomUUID()
 
