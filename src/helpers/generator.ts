@@ -4,6 +4,7 @@ import { randomArray, randomBoolean, randomNumber, randomPick, randomString } fr
 import { readFileSync }                                                       from 'fs'
 import path                                                                   from 'path'
 import { AnyObjectType, AnyType } from '../type'
+import { getKindName } from './debugger'
 
 const typeFile = 'src/type.d.ts'
 
@@ -78,7 +79,7 @@ export const generateMember = (generated: AnyObjectType, member: AnyType) => {
 			generateLiteral(generated, member)
 			break
 		default:
-			throw new Error(`Unsupported type : ${kind}`)
+			throw new Error(`Unsupported type : ${getKindName(kind)} (${kind})`)
 	}
 }
 
