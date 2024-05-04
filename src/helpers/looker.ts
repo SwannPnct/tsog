@@ -14,3 +14,7 @@ export const getMembers = (node: ts.Node): null | ts.Node[] => {
 export const getName = (node: ts.Node): string => {
     return (node as any).name.escapedText
 }
+
+export const findStatementByName = (file: ts.SourceFile, name: string) => {
+    return file.statements.find((child: ts.Statement) => getName(child) === name)
+}
