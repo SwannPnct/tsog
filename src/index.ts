@@ -1,6 +1,7 @@
 import { _generate } from './helpers/generator'
+import { AnyObjectType } from './type'
 
-export const generate = (targetName: string, overrides: Record<string, any> = {}): any => {
+export const generate = <T>(targetName: string, overrides: AnyObjectType = {}): T => {
 	const generated = _generate(targetName)
 
 	if (!Array.isArray(generated) && typeof generated === 'object') {
@@ -11,5 +12,3 @@ export const generate = (targetName: string, overrides: Record<string, any> = {}
 
 	return generated
 }
-
-console.log(generate('ComplexObjectInterface'))

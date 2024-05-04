@@ -1,6 +1,7 @@
 import ts from 'typescript'
+import { AnyType } from '../type'
 
-export const getMembers = (node: any): null | ts.Node[] => {
+export const getMembers = (node: AnyType): null | ts.Node[] => {
 	switch (node.kind) {
 		case ts.SyntaxKind.InterfaceDeclaration:
 		case ts.SyntaxKind.TypeLiteral:
@@ -12,7 +13,7 @@ export const getMembers = (node: any): null | ts.Node[] => {
 	}
 }
 
-export const getName = (node: any): string => {
+export const getName = (node: AnyType): string => {
 	return node.name.escapedText
 }
 
@@ -20,10 +21,10 @@ export const findStatementByName = (file: ts.SourceFile, name: string) => {
 	return file.statements.find((child: ts.Statement) => getName(child) === name)
 }
 
-export const getTypeKind = (node: any): number => {
+export const getTypeKind = (node: AnyType): number => {
 	return getKind(node.type)
 }
 
-export const getKind = (node: any): number => {
+export const getKind = (node: AnyType): number => {
 	return node.kind
 }

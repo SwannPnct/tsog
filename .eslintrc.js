@@ -13,16 +13,12 @@ module.exports = {
 		'plugin:@typescript-eslint/recommended'
 	],
 	plugins: [
-		'@typescript-eslint',
-		'align-assignments',
-		'align-import'
+		'@typescript-eslint'
 	],
 	rules: {
-		'align-assignments/align-assignments': 'error',
-		'align-import/align-import'          : 'error',
-		curly                                : ['error', 'multi-or-nest'],
-		'comma-dangle'                       : ['error', 'never'],
-		indent                               : [
+		curly         : ['error', 'multi-or-nest'],
+		'comma-dangle': ['error', 'never'],
+		indent        : [
 			'error',
 			'tab',
 			{

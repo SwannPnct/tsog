@@ -3,10 +3,11 @@ import { getTypeKind, getName, getKind, findStatementByName, getMembers }     fr
 import { randomArray, randomBoolean, randomNumber, randomPick, randomString } from './randomizer'
 import { readFileSync }                                                       from 'fs'
 import path                                                                   from 'path'
+import { AnyObjectType, AnyType } from '../type'
 
 const typeFile = 'src/type.d.ts'
 
-export const _generate = (targetName: string): any => {
+export const _generate = (targetName: string) => {
 	const data = readFileSync(path.resolve(typeFile), { encoding: 'utf-8' })
 	const file = ts.createSourceFile('src.ts', data, ts.ScriptTarget.Latest)
 
@@ -17,10 +18,10 @@ export const _generate = (targetName: string): any => {
 	return generateType(node)
 }
 
-export const generateType = (node: any) => {
+export const generateType = (node: AnyType) => {
 	const members = getMembers(node)
 
-	const generated: any = {}
+	const generated: AnyObjectType = {}
 	if (!members) {
 		generateMember(generated, node)
 		return generated[getName(node)]
@@ -33,7 +34,7 @@ export const generateType = (node: any) => {
 }
 
 
-export const generateMember = (generated: Record<any, any>, member: any) => {
+export const generateMember = (generated: AnyObjectType, member: AnyType) => {
 	if (!member) throw new Error('Falsy member')
 
 	if (!!member.questionToken && randomBoolean()) 
@@ -81,11 +82,11 @@ export const generateMember = (generated: Record<any, any>, member: any) => {
 	}
 }
 
-export const generateParenthesizedType = (generated: Record<any, any>, member: any) => {
+export const generateParenthesizedType = (generated: AnyObjectType, member: AnyType) => {
 	generateMember(generated, { ...member.type, name: member.name })
 }
 
-export const generateUnion = (generated: Record<any, any>, member: any) => {
+export const generateUnion = (generated: AnyObjectType, member: AnyType) => {
 	const { types } = member.type
 
 	generateMember(generated, {
@@ -94,15 +95,15 @@ export const generateUnion = (generated: Record<any, any>, member: any) => {
 	})
 }
 
-export const generateNestedType = (generated: Record<any, any>, member: any) => {
+export const generateNestedType = (generated: AnyObjectType, member: AnyType) => {
 	generated[getName(member)] = _generate(member.type.typeName.escapedText)
 }
 
-export const generateTypeLiteral = (generated: Record<any, any>, member: any) => {
+export const generateTypeLiteral = (generated: AnyObjectType, member: AnyType) => {
 	generated[getName(member)] = generateType(member.type)
 }
 
-export const generateArray = (generated: Record<any, any>, member: any) => {
+export const generateArray = (generated: AnyObjectType, member: AnyType) => {
 	const array = randomArray()
 	for (let i = 0; i < array.length; i++) {
 		generateMember(array, {
@@ -119,27 +120,27 @@ export const generateArray = (generated: Record<any, any>, member: any) => {
 	generated[getName(member)] = array
 }
 
-export const generateString = (generated: Record<any, any>, member: ts.Node) => {
+export const generateString = (generated: AnyObjectType, member: ts.Node) => {
 	generated[getName(member)] = randomString()
 }
 
-export const generateNumber = (generated: Record<any, any>, member: ts.Node) => {
+export const generateNumber = (generated: AnyObjectType, member: ts.Node) => {
 	generated[getName(member)] = randomNumber()
 }
 
-export const generateBoolean = (generated: Record<any, any>, member: ts.Node) => {
+export const generateBoolean = (generated: AnyObjectType, member: ts.Node) => {
 	generated[getName(member)] = randomBoolean()
 }
 
-export const generateUndefined = (generated: Record<any, any>, member: ts.Node) => {
+export const generateUndefined = (generated: AnyObjectType, member: ts.Node) => {
 	generated[getName(member)] = undefined
 }
 
-export const generateNull = (generated: Record<any, any>, member: ts.Node) => {
+export const generateNull = (generated: AnyObjectType, member: ts.Node) => {
 	generated[getName(member)] = null
 }
 
-export const generateLiteral = (generated: Record<any, any>, member: any) => {
+export const generateLiteral = (generated: AnyObjectType, member: AnyType) => {
 	const literal = member.type.literal
 	const kind    = getKind(literal)
 	switch (getKind(literal)) {
@@ -154,10 +155,10 @@ export const generateLiteral = (generated: Record<any, any>, member: any) => {
 	}
 }
 
-export const generateNumericLiteral = (generated: Record<any, any>, member: any, literal: any) => {
+export const generateNumericLiteral = (generated: AnyObjectType, member: AnyType, literal: AnyType) => {
 	generated[getName(member)] = parseInt(literal.text, 10)
 }
 
-export const generateStringLiteral = (generated: Record<any, any>, member: any, literal: any) => {
+export const generateStringLiteral = (generated: AnyObjectType, member: AnyType, literal: AnyType) => {
 	generated[getName(member)] = literal.text
 }
