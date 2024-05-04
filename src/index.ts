@@ -18,7 +18,7 @@ export const generate = (targetName: string): Record<any, any> => {
 
   const members = getMembers(node)
 
-  console.log(members)
+  // console.log(members)
 
   if (!members) throw new Error(`Unable to find any members for "${targetName}"`)
 
@@ -29,4 +29,4 @@ export const generate = (targetName: string): Record<any, any> => {
   return generated
 }
 
-console.log(generate('ArrayObjectInterface'))
+console.log(generate('EnumObjectInterface'))

@@ -1,13 +1,18 @@
 import ts from "typescript";
-import { getKind, getName } from "./looker";
+import { getTypeKind, getName, getKind } from "./looker";
 import { createBoolean, createNumber, createString } from "./creator";
 
-export const generateMember = (generated: Record<any, any>, member: ts.Node) => {
-    if (!!(member as any).questionToken && createBoolean()) {
+export const generateMember = (generated: Record<any, any>, member: any) => {
+    if (!!member.questionToken && createBoolean()) {
         return
     }
 
-    switch (getKind(member)) {
+    const kind = getTypeKind(member)
+
+    switch (kind) {
+        case ts.SyntaxKind.UnionType:
+            generateUnion(generated, member)
+            break;
         case ts.SyntaxKind.ArrayType:
             generateArray(generated, member)
             break;
@@ -26,23 +31,36 @@ export const generateMember = (generated: Record<any, any>, member: ts.Node) => 
         case ts.SyntaxKind.UndefinedKeyword:
             generateUndefined(generated, member)
             break;
-        default:
+        case ts.SyntaxKind.LiteralType:
+            generateLiteral(generated, member)
             break;
+        default:
+            throw new Error(`Unsupported type : ${kind}`)
     }
 }
 
-export const generateArray = (generated: Record<any, any>, member: ts.Node) => {
+export const generateUnion = (generated: Record<any, any>, member: any) => {
+    const { types } = member.type
+    const pick = types[(Math.floor(Math.random() * types.length))]
+
+    generateMember(generated, {
+        ...member,
+        type: pick
+    })
+}
+
+export const generateArray = (generated: Record<any, any>, member: any) => {
     const size = Math.floor(Math.random() * 10)
     const array: any[] = []
     for (let i = 0; i < size; i++) {
-        generateMember(array, ({
+        generateMember(array, {
             type: {
-                ...(member as any).type.elementType
+                ...member.type.elementType
             },
             name: {
                 escapedText: i
             }
-        }) as any)
+        })
     }
 
     generated[getName(member)] = array
@@ -66,4 +84,27 @@ export const generateUndefined = (generated: Record<any, any>, member: ts.Node) 
 
 export const generateNull = (generated: Record<any, any>, member: ts.Node) => {
     generated[getName(member)] = null
+}
+
+export const generateLiteral = (generated: Record<any, any>, member: any) => {
+    const literal = member.type.literal
+    const kind = getKind(literal)
+    switch (getKind(literal)) {
+        case ts.SyntaxKind.NumericLiteral:
+            generateNumericLiteral(generated, member, literal)
+            break;
+        case ts.SyntaxKind.StringLiteral:
+            generateStringLiteral(generated, member, literal)
+            break;
+        default:
+            throw new Error(`Unknown literal type : ${kind}`)
+    }
+}
+
+export const generateNumericLiteral = (generated: Record<any, any>, member: any, literal: any) => {
+    generated[getName(member)] = parseInt(literal.text, 10)
+}
+
+export const generateStringLiteral = (generated: Record<any, any>, member: any, literal: any) => {
+    generated[getName(member)] = literal.text
 }

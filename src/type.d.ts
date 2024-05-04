@@ -48,6 +48,7 @@ export interface ComplexObjectInterface {
 
 export interface EnumObjectInterface {
     type: 'incident' | 'false_negative'
+    binary: 1 | 0
 }
 
 export type SingleType = string
