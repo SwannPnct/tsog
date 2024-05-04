@@ -1,13 +1,16 @@
 import ts from "typescript";
-import { getName } from "./looker";
-import { getBooleanProbability } from "./values";
+import { getKind, getName } from "./looker";
+import { createBoolean, createNumber, createString } from "./creator";
 
 export const generateMember = (generated: Record<any, any>, member: ts.Node) => {
-    if (!!(member as any).questionToken && getBooleanProbability()) {
+    if (!!(member as any).questionToken && createBoolean()) {
         return
     }
 
-    switch ((member as any).type.kind) {
+    switch (getKind(member)) {
+        case ts.SyntaxKind.ArrayType:
+            generateArray(generated, member)
+            break;
         case ts.SyntaxKind.StringKeyword:
             generateString(generated, member)
             break;
@@ -17,21 +20,44 @@ export const generateMember = (generated: Record<any, any>, member: ts.Node) => 
         case ts.SyntaxKind.BooleanKeyword:
             generateBoolean(generated, member)
             break;
+        case ts.SyntaxKind.NullKeyword:
+            generateNull(generated, member)
+            break;
+        case ts.SyntaxKind.UndefinedKeyword:
+            generateUndefined(generated, member)
+            break;
         default:
             break;
     }
 }
 
+export const generateArray = (generated: Record<any, any>, member: ts.Node) => {
+    const size = Math.floor(Math.random() * 10)
+    const array: any[] = []
+    for (let i = 0; i < size; i++) {
+        generateMember(array, ({
+            type: {
+                ...(member as any).type.elementType
+            },
+            name: {
+                escapedText: i
+            }
+        }) as any)
+    }
+
+    generated[getName(member)] = array
+}
+
 export const generateString = (generated: Record<any, any>, member: ts.Node) => {
-    generated[getName(member)] = `string-${Date.now()}`
+    generated[getName(member)] = createString()
 }
 
 export const generateNumber = (generated: Record<any, any>, member: ts.Node) => {
-    generated[getName(member)] = Date.now()
+    generated[getName(member)] = createNumber()
 }
 
 export const generateBoolean = (generated: Record<any, any>, member: ts.Node) => {
-    generated[getName(member)] = getBooleanProbability()
+    generated[getName(member)] = createBoolean()
 }
 
 export const generateUndefined = (generated: Record<any, any>, member: ts.Node) => {

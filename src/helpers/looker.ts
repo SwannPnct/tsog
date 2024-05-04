@@ -18,3 +18,7 @@ export const getName = (node: ts.Node): string => {
 export const findStatementByName = (file: ts.SourceFile, name: string) => {
     return file.statements.find((child: ts.Statement) => getName(child) === name)
 }
+
+export const getKind = (node: ts.Node): number => {
+    return (node as any).type.kind
+}
