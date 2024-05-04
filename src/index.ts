@@ -29,4 +29,4 @@ export const generate = (targetName: string): Record<any, any> => {
   return generated
 }
 
-console.log(generate('EnumObjectInterface'))
+console.log(generate('ComplexObjectInterface'))
