@@ -12,5 +12,3 @@ export const generate = <T>(targetName: string, overrides: AnyObjectType = {}): 
 
 	return generated
 }
-
-console.log(generate('AnyType'))

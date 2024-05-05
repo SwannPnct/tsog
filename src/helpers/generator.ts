@@ -1,16 +1,12 @@
-import ts                                                                     from 'typescript'
-import { getTypeKind, getName, getKind, findStatementByName, getMembers }     from './looker'
+import ts from 'typescript'
+import { getTypeKind, getName, getKind, findStatementByName, getMembers } from './node'
 import { randomArray, randomBoolean, randomNumber, randomPick, randomString } from './randomizer'
-import { readFileSync }                                                       from 'fs'
-import path                                                                   from 'path'
 import { AnyObjectType, AnyType } from '../type'
 import { getKindName } from './debugger'
-
-const typeFile = 'src/type.d.ts'
+import { getSourceFile } from './file'
 
 export const _generate = (targetName: string) => {
-	const data = readFileSync(path.resolve(typeFile), { encoding: 'utf-8' })
-	const file = ts.createSourceFile('src.ts', data, ts.ScriptTarget.Latest)
+	const file = getSourceFile()
 
 	const node = findStatementByName(file, targetName)
 
