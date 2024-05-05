@@ -2,12 +2,17 @@
     "name": "tsog",
     "version": "0.1.0",
     "description": "",
-    "main": "index.js",
+    "main": "./dist/index.js",
+    "module": "./dist/index.mjs",
+    "types": "./dist/index.d.ts",
+    "files": [
+        "dist"
+    ],
     "scripts": {
         "clean": "npx tsc --build --clean && rm -rf dist",
-        "build": "npx tsc",
+        "compile": "npx tsc",
         "start": "node dist/src/index.js",
-        "prestart": "npm run build",
+        "prestart": "npm run compile",
         "poststart": "npm run clean",
         "lint:all": "eslint --ext \".ts,.js\" --ignore-path .gitignore .",
         "lintfix": "npm run lint:all -- --fix",
