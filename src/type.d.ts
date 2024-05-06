@@ -4,9 +4,6 @@ export type AnyObjectType = Record<AnyType, AnyType>
 
 export type AnyArrayType = AnyType[]
 
-export type packageJSONType = {
-    tsog: {
-        files: string[]
-    },
-    [key : string]: AnyType
+export type ConfigType = {
+    files: string[] | null
 }

@@ -93,7 +93,15 @@ export const generateUnion = (generated: AnyObjectType, member: AnyType) => {
 }
 
 export const generateNestedType = (generated: AnyObjectType, member: AnyType) => {
-	generated[getName(member)] = _generate(member.type.typeName.escapedText)
+	const { escapedText } = member.type.typeName
+	switch (escapedText) {
+		case 'Date':
+			generateDate(generated, member)
+			break
+		default:
+			generated[getName(member)] = _generate(member.type.typeName.escapedText)
+			break
+	}
 }
 
 export const generateTypeLiteral = (generated: AnyObjectType, member: AnyType) => {
@@ -158,4 +166,8 @@ export const generateNumericLiteral = (generated: AnyObjectType, member: AnyType
 
 export const generateStringLiteral = (generated: AnyObjectType, member: AnyType, literal: AnyType) => {
 	generated[getName(member)] = literal.text
+}
+
+export const generateDate = (generated: AnyObjectType, member: ts.Node) => {
+	generated[getName(member)] = new Date()
 }

@@ -1,7 +1,7 @@
 import { _generate } from './helpers/generator'
 import { AnyObjectType } from './type'
 
-export const generate = <T>(targetName: string, overrides: AnyObjectType = {}): T => {
+export const generate = <T>(targetName: string, overrides: AnyObjectType = {}): Promise<T> => {
 	const generated = _generate(targetName)
 
 	if (!Array.isArray(generated) && typeof generated === 'object') {
@@ -12,3 +12,5 @@ export const generate = <T>(targetName: string, overrides: AnyObjectType = {}): 
 
 	return generated
 }
+
+export { defineConfig } from './config'

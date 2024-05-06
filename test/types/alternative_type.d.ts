@@ -1,3 +1,5 @@
+import { GenericObjectInterface, GenericObjectType } from './type'
+
 export interface ParentObjectInterface {
     nestedInterfaces: GenericObjectInterface[]
     nestedType: GenericObjectType

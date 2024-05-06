@@ -1,23 +1,19 @@
 import { readFileSync } from 'fs'
 import path from 'path'
 import ts from 'typescript'
-import parentJSON from 'parent-package-json'
-import { packageJSONType } from '../type'
+import config from '../config'
 
 export const getSourceFile = () => {
-	const parent = parentJSON(undefined)
-	const json = parent.parse()
+	if (!config.files) throw new Error('Type files not configurated')
 
-	if (!json) throw new Error('Unable to locate package.json file')
+	const {files} = config
 
-	const filePaths = (json as packageJSONType).tsog.files
-
-	if (!filePaths.length) throw new Error('File paths provided by the package.json must be in an array')
+	if (!files.length) throw new Error('File paths must be provided in an array')
 
 	let data = ''
 
-	filePaths.forEach((filePath) => {
-		data += readFileSync(path.resolve(filePath), { encoding: 'utf-8' })
+	files.forEach((file) => {
+		data += readFileSync(path.resolve(process.cwd(), file), { encoding: 'utf-8' })
 		data += '\n'
 	})
 

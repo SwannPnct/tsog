@@ -37,3 +37,8 @@ export interface EnumObjectInterface {
 }
 
 export type SingleType = string
+
+export interface DatedInterface {
+    createdAt: Date
+    deletedAt: Date
+}
