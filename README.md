@@ -28,9 +28,15 @@ If you use this package to help you test your app with jest or vitest, call the 
 
 type.d.ts
 ```ts
+
 export interface SomeObjectInterface {
     name: string
-    id: number
+    id: number,
+    nested: SomeOtherObjectInterface
+}
+
+export interface SomeOtherObjectInterface {
+    name: string
 }
 ```
 
@@ -40,6 +46,11 @@ import { generate } from 'tsog';
 
 const object = generate('SomeObjectInterface');
 
-// you can also infer a type
+// you can infer a type
 const object = generate<SomeObjectInterface>('SomeObjectInterface');
+
+// and override the results
+const object = generate('SomeObjectInterface', {
+    'nested.name': 'IPreferThisName'
+});
 ```
