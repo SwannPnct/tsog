@@ -69,4 +69,39 @@ describe('index', () => {
 
 		vi.useRealTimers()
 	})
+
+	it('overrides', () => {
+		expect(generate<GenericObjectInterface>('GenericObjectInterface', {
+			overrides: {
+				id: number + 1
+			}})).toEqual({
+			id      : number + 1,
+			isActive: boolean,
+			name    : string
+		})
+
+		expect(generate<ParentObjectInterface>('ParentObjectInterface', {
+			overrides: {
+				'nestedInterfaces[0]': {
+					newKey: string
+				} 
+			}})).toEqual({
+			nestedInterfaces: [{
+				newKey: string
+			},{
+				id      : number,
+				isActive: boolean,
+				name    : string
+			}],
+			nestedType: {
+				id      : number,
+				isActive: boolean,
+				name    : string
+			},
+			nestedObject: {
+				id  : number,
+				name: string
+			}
+		})
+	})
 })

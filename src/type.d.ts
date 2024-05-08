@@ -7,3 +7,7 @@ export type AnyArrayType = AnyType[]
 export type ConfigType = {
     files: string[] | null
 }
+
+export type OptionsType = {
+    overrides?: AnyObjectType
+}
