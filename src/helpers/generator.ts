@@ -2,13 +2,14 @@ import ts from 'typescript'
 import { getTypeKind, getName, getKind, findStatementByName, getMembers } from './node'
 import { randomArray, randomBoolean, randomNumber, randomPick, randomString } from './randomizer'
 import { AnyObjectType, AnyType } from '../type'
+import tsog from '..'
 import { getKindName } from './debugger'
-import { getSourceFile } from './file'
 
 export const _generate = (targetName: string) => {
-	const file = getSourceFile()
+	const {source} = tsog
+	if (!source) throw new Error('Source file not generated')
 
-	const node = findStatementByName(file, targetName)
+	const node = findStatementByName(source, targetName)
 
 	if (!node) throw new Error(`Unable to find the type or interface for "${targetName}"`)
 

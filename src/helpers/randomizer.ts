@@ -3,7 +3,7 @@ import { AnyArrayType } from '../type'
 
 export const randomString = () => randomUUID()
 
-export const randomNumber = () => randomInt(99999999)
+export const randomNumber = () => randomInt(Number.MAX_SAFE_INTEGER)
 
 export const randomBoolean = () => Math.random() * 100 >= 49
 
