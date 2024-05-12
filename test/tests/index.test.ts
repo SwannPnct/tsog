@@ -2,10 +2,9 @@ import { describe, expect, it, vi } from 'vitest'
 import { mockRandomizer } from '../mocks/mockRandomizer'
 import { DatedInterface, DifferentTypeObjectInterface, EnumObjectInterface, GenericObjectInterface, GenericObjectType, OptionalObjectType, SingleType } from '../types/type'
 import { ParentObjectInterface } from '../types/alternative_type'
-import tsog from '../../src'
+import { generate } from '../../src'
 
 describe('index', () => {
-	const {generate} = tsog
 	mockRandomizer()
 
 	const string = 'string-string-string-string-string'

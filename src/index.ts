@@ -30,7 +30,7 @@ class TSOG {
 		return generated
 	}
 
-	createSourceFile () {
+	private createSourceFile () {
 		const { files } = this
 		if (!files) throw new Error('Type files not configurated')
 		if (!files.length) throw new Error('File paths must be provided in an array')
@@ -68,11 +68,12 @@ class TSOG {
 }
 
 let instance: undefined | typeof TSOG.prototype
-export const getTSOGSingleton = () => {
+const _getTSOGSingleton = () => {
 	if (!instance) 
 		instance = new TSOG()
 	
 	return instance
 }
 
-export default getTSOGSingleton()
+export default _getTSOGSingleton()
+export const generate = _getTSOGSingleton().generate
