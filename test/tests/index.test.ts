@@ -66,7 +66,7 @@ describe('index', () => {
 
 		expect(generate('uncompiledObject')).toEqual({
 			name: string,
-			id: number
+			id  : number
 		})
 
 		vi.useRealTimers()

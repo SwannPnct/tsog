@@ -30,7 +30,7 @@ class TSOG {
 		return generated
 	}
 
-	createSourceFile() {
+	createSourceFile () {
 		const { files } = this
 		if (!files) throw new Error('Type files not configurated')
 		if (!files.length) throw new Error('File paths must be provided in an array')
@@ -48,15 +48,15 @@ class TSOG {
 		this.source = ts.createSourceFile('src.ts', data, ts.ScriptTarget.Latest)
 	}
 
-	private compileJS(files: string[]) {
+	private compileJS (files: string[]) {
 		const options = {
-			allowJs: true,
-			declaration: true, 
+			allowJs            : true,
+			declaration        : true, 
 			emitDeclarationOnly: true
 		}
 		const createdFiles: Record<string,string> = {}
 
-		const host = ts.createCompilerHost(options);
+		const host = ts.createCompilerHost(options)
 		host.writeFile = (fileName: string, contents: string) => createdFiles[fileName] = contents
 
 		const program = ts.createProgram(files, options, host)

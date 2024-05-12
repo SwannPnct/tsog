@@ -12,14 +12,13 @@ $ npm i -D tsog
 
 ### Configurating
 
-The module uses the path to your type files to look for specific type references.
+The module uses the path to your typescript files to look for specific type references. 
+It can also take a js file, from which it will compile a declaration file and read the types from it.
 
 ```ts
-import { defineConfig } from 'tsog';
+import tsog from 'tsog';
 
-defineConfig({
-    files: ['type.d.ts']
-})
+tsog.defineFiles(['type.d.ts', 'uncompiled.js'])
 ```
 
 If you use this package to help you test your app with jest or vitest, call the method on your test setup file. 
@@ -42,15 +41,17 @@ export interface SomeOtherObjectInterface {
 
 app.test.ts
 ```ts
-import { generate } from 'tsog';
+import tsog from 'tsog';
 
-const object = generate('SomeObjectInterface');
+const object = tsog.generate('SomeObjectInterface');
 
 // you can infer a type
-const object = generate<SomeObjectInterface>('SomeObjectInterface');
+const object = tsog.generate<SomeObjectInterface>('SomeObjectInterface');
 
 // and override the results
-const object = generate('SomeObjectInterface', {
-    'nested.name': 'IPreferThisName'
+const object = tsog.generate('SomeObjectInterface', {
+    overrides: {
+        'nested.name': 'IPreferThisName'
+    }
 });
 ```
