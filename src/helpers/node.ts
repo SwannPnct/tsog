@@ -8,6 +8,8 @@ export const getMembers = (node: AnyType): null | ts.Node[] => {
 			return node.members
 		case ts.SyntaxKind.TypeAliasDeclaration:
 			return node.type.members
+		case ts.SyntaxKind.ModuleDeclaration:
+			return node.body.statements.map((statement: AnyType) => statement.declarationList.declarations[0])
 		default:
 			return null
 	}

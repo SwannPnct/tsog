@@ -35,15 +35,36 @@ class TSOG {
 		if (!files) throw new Error('Type files not configurated')
 		if (!files.length) throw new Error('File paths must be provided in an array')
 
-		let data = ''
+		const uncompiledJSfiles = files.filter((file) => file.endsWith('.js'))
+		const typeFiles = files.filter((file) => file.endsWith('.ts'))
 
-		files.forEach((file) => {
-			data += readFileSync(path.resolve(process.cwd(), file), { encoding: 'utf-8' })
+		let data = this.compileJS(uncompiledJSfiles)
+
+		typeFiles.forEach((file) => {
 			data += '\n'
+			data += readFileSync(path.resolve(process.cwd(), file), { encoding: 'utf-8' })
 		})
 
 		this.source = ts.createSourceFile('src.ts', data, ts.ScriptTarget.Latest)
 	}
+
+	private compileJS(files: string[]) {
+		const options = {
+			allowJs: true,
+			declaration: true, 
+			emitDeclarationOnly: true
+		}
+		const createdFiles: Record<string,string> = {}
+
+		const host = ts.createCompilerHost(options);
+		host.writeFile = (fileName: string, contents: string) => createdFiles[fileName] = contents
+
+		const program = ts.createProgram(files, options, host)
+		program.emit()
+
+		return Object.values(createdFiles).join('\n') ?? ''
+	}
+
 }
 
 let instance: undefined | typeof TSOG.prototype

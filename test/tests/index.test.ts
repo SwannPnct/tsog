@@ -64,6 +64,11 @@ describe('index', () => {
 			deletedAt: now
 		})
 
+		expect(generate('uncompiledObject')).toEqual({
+			name: string,
+			id: number
+		})
+
 		vi.useRealTimers()
 	})
 
